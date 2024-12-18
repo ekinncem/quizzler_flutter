@@ -16,7 +16,7 @@ class QuizBrain {
     Question(questionText: 'The loudest sound produced by any animal is 188 decibels. That animal is the African Elephant.', questionAnswer: false),
     Question(questionText: 'The total surface area of two human lungs is approximately 70 square metres.', questionAnswer: true),
     Question(questionText: 'Google was originally called "Backrub".', questionAnswer: true),
-    Question(questionText: 'Chocolate affects a dog\'s heart and nervous system; a few ounces are enough to kill a small dog.', questionAnswer: true),
+    Question(questionText: 'Chocolate affects a dog\'s heart and nervous system; a few ounces .', questionAnswer: true),
     Question(questionText: 'In West Virginia, USA, if you accidentally hit an animal with your car, you are free to take it home to eat.', questionAnswer: true),
   ];
 
