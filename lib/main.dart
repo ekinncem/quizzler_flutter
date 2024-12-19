@@ -60,7 +60,7 @@ class _QuizPageState extends State<QuizPage> {
                 quizBrain.getQuestionText(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 24.0,
+                  fontSize: 22.0,
                   color: Colors.white,
                 ),
               ),
