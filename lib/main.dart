@@ -88,7 +88,7 @@ class _QuizPageState extends State<QuizPage> {
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.all(15.0),
+            padding: EdgeInsets.all(25.0),
             child: TextButton(
               child: Text(
                 'False',
