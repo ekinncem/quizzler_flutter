@@ -79,7 +79,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                checkAnswer(true);
+                checkAnswer(false);
               },
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
