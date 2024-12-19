@@ -75,7 +75,7 @@ class _QuizPageState extends State<QuizPage> {
                 'True',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 25.0,
+                  fontSize: 24.0,
                 ),
               ),
               onPressed: () {
