@@ -1,8 +1,7 @@
-// ignore_for_file: sort_child_properties_last, use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'dart:async';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -32,50 +31,100 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
-  int questionCount = quizBrain.getTotalQuestions(); // Toplam soru sayısı
+  Stopwatch stopwatch = Stopwatch();
+  List<int> levelTimes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    stopwatch.start();
+  }
 
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = quizBrain.getCorrectAnswer();
 
     setState(() {
-      if (scoreKeeper.length < questionCount) { // Tıklama haklarını kontrol et
-        if (userPickedAnswer == correctAnswer) {
-          scoreKeeper.add(Icon(Icons.check, color: Colors.green));
-        } else {
-          scoreKeeper.add(Icon(Icons.close, color: Colors.red));
-        }
-
-        if (quizBrain.questionNumber < questionCount - 1) {
-          quizBrain.nextQuestion();
-        } else {
-          // Yarışmanın sonuna gelindiğinde mesaj gösterme
-          Alert(
-            context: context,
-            type: AlertType.info,
-            title: "Competetion is Over!",
-            desc: "You should start over for better timing experience!",
-            buttons: [
-              DialogButton(
-                child: Text(
-                  "Proceed",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  setState(() {
-                    quizBrain.reset(); // Yarışmayı sıfırlama
-                    scoreKeeper.clear(); // Skorları temizleme
-                  });
-                },
-                width: 120,
-              )
-            ],
-          ).show();
-        }
+      if (userPickedAnswer == correctAnswer) {
+        scoreKeeper.add(Icon(Icons.check, color: Colors.green));
       } else {
-        print('Tıklama hakları bitti');
+        scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+      }
+
+      if (quizBrain.questionNumber < quizBrain.getTotalQuestions() - 1) {
+        quizBrain.nextQuestion();
+      } else {
+        // Seviye bittiğinde zaman kaydet ve uyarı göster
+        stopwatch.stop();
+        int levelTime = stopwatch.elapsedMilliseconds;
+        levelTimes.add(levelTime);
+        stopwatch.reset();
+
+        String levelTimeString = (levelTime / 1000).toStringAsFixed(2); // Saniye cinsinden süre
+        String totalTimeString = (levelTimes.reduce((a, b) => a + b) / 1000).toStringAsFixed(2); // Toplam süre
+
+        Alert(
+          context: context,
+          type: AlertType.info,
+          title: "Level ${quizBrain.level} Completed",
+          desc: "Congratulations! You have completed level ${quizBrain.level}.\nTime taken: $levelTimeString seconds\nTotal time: $totalTimeString seconds",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Continue",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                setState(() {
+                  quizBrain.nextLevel();
+                  scoreKeeper.clear();
+                  if (quizBrain.level > 5) {
+                    showSummary(context);
+                  } else {
+                    stopwatch.start();
+                  }
+                });
+              },
+              width: 120,
+            )
+          ],
+        ).show();
       }
     });
+  }
+
+  void showSummary(BuildContext context) {
+    int totalTime = levelTimes.reduce((a, b) => a + b);
+    String summary = '';
+    for (int i = 0; i < levelTimes.length; i++) {
+      summary += 'Level ${i + 1}: ${(levelTimes[i] / 1000).toStringAsFixed(2)} seconds\n';
+    }
+    summary += 'Total Time: ${(totalTime / 1000).toStringAsFixed(2)} seconds';
+
+    Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Quiz Completed!",
+      desc: "Congratulations on completing the quiz! Here are your times:\n$summary",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Restart",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+            setState(() {
+              quizBrain.restartQuiz();
+              scoreKeeper.clear();
+              levelTimes.clear();
+              stopwatch.start();
+            });
+          },
+          width: 120,
+        ),
+      ],
+    ).show();
   }
 
   @override
@@ -147,9 +196,3 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 }
-
-/*
-question1: 'You can lead a cow down stairs but not up stairs.', false,
-question2: 'Approximately one quarter of human bones are in the feet.', true,
-question3: 'A slug's blood is green.', true,
-*/

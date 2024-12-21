@@ -3,8 +3,9 @@ import 'question.dart';
 class QuizBrain {
 
   int _questionNumber = 0;
-
-  List<Question> _questionBank = [
+  int _level = 1;
+  List<Question> _questionBank = [];
+  List<Question> _level1Questions = [
     Question(questionText: 'Some cats are actually allergic to humans', questionAnswer: true),
     Question(questionText: 'You can lead a cow down stairs but not up stairs.', questionAnswer: false),
     Question(questionText: 'Approximately one quarter of human bones are in the feet.', questionAnswer: true),
@@ -20,11 +21,47 @@ class QuizBrain {
     Question(questionText: 'In West Virginia, USA, if you accidentally hit an animal with your car, you are free to take it home to eat.', questionAnswer: true),
   ];
 
+  List<Question> _level2Questions = [
+    Question(questionText: 'Bananas are berries but strawberries are not.', questionAnswer: true),
+    Question(questionText: 'Lightning never strikes the same place twice.', questionAnswer: false),
+    Question(questionText: 'A rhinoceros\' horn is made of hair.', questionAnswer: true),
+    Question(questionText: 'There are more stars in the universe than grains of sand on all the world\'s beaches.', questionAnswer: true),
+    Question(questionText: 'Humans and giraffes have the same number of neck vertebrae.', questionAnswer: true),
+  ];
+
+  List<Question> _level3Questions = [
+    Question(questionText: 'Honey never spoils.', questionAnswer: true),
+    Question(questionText: 'The Great Wall of China is visible from space.', questionAnswer: false),
+    Question(questionText: 'Octopuses have three hearts.', questionAnswer: true),
+    Question(questionText: 'Goldfish only have a three-second memory.', questionAnswer: false),
+    Question(questionText: 'Humans can distinguish over a million different colors.', questionAnswer: true),
+  ];
+
+  List<Question> _level4Questions = [
+    Question(questionText: 'An octopus has eight hearts.', questionAnswer: false),
+    Question(questionText: 'The Eiffel Tower can be 15 cm taller during the summer.', questionAnswer: true),
+    Question(questionText: 'Humans and dolphins are the only animals that have sex for pleasure.', questionAnswer: false),
+    Question(questionText: 'A day on Venus is longer than a year on Venus.', questionAnswer: true),
+    Question(questionText: 'There are more fake flamingos in the world than real flamingos.', questionAnswer: true),
+  ];
+
+  List<Question> _level5Questions = [
+    Question(questionText: 'Slugs have four noses.', questionAnswer: true),
+    Question(questionText: 'The unicorn is the national animal of Scotland.', questionAnswer: true),
+    Question(questionText: 'A group of flamingos is called a "flamboyance".', questionAnswer: true),
+    Question(questionText: 'There are more atoms in a glass of water than glasses of water in all the oceans on Earth.', questionAnswer: true),
+    Question(questionText: 'A snail can sleep for three years.', questionAnswer: true),
+  ];
+
+  QuizBrain() {
+    _questionBank = _level1Questions;
+  }
+
   void nextQuestion() {
     if (_questionNumber < _questionBank.length - 1) {
       _questionNumber++;
     } else {
-      print('Yarışmanın sonuna geldiniz! Başa dönmelisiniz.');
+      print('Level $_level completed! Please proceed to the next level.');
     }
   }
 
@@ -44,8 +81,40 @@ class QuizBrain {
     _questionNumber = 0;
   }
 
-  // Getter metodu
   int get questionNumber {
     return _questionNumber;
+  }
+
+  int get level {
+    return _level;
+  }
+
+  void nextLevel() {
+    _level++;
+    _questionNumber = 0;
+    switch (_level) {
+      case 2:
+        _questionBank = _level2Questions;
+        break;
+      case 3:
+        _questionBank = _level3Questions;
+        break;
+      case 4:
+        _questionBank = _level4Questions;
+        break;
+      case 5:
+        _questionBank = _level5Questions;
+        break;
+      default:
+        _level = 1;
+        _questionBank = _level1Questions;
+        break;
+    }
+  }
+
+  void restartQuiz() {
+    _level = 1;
+    _questionBank = _level1Questions;
+    reset();
   }
 }
