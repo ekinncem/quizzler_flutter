@@ -3,7 +3,7 @@ import 'question.dart';
 class QuizBrain {
 
   int _questionNumber = 0;
- 
+
   List<Question> _questionBank = [
     Question(questionText: 'Some cats are actually allergic to humans', questionAnswer: true),
     Question(questionText: 'You can lead a cow down stairs but not up stairs.', questionAnswer: false),
@@ -20,20 +20,32 @@ class QuizBrain {
     Question(questionText: 'In West Virginia, USA, if you accidentally hit an animal with your car, you are free to take it home to eat.', questionAnswer: true),
   ];
 
-  void nextQuestion(){
-    if(_questionNumber < _questionBank.length -1){
+  void nextQuestion() {
+    if (_questionNumber < _questionBank.length - 1) {
       _questionNumber++;
-      print(_questionNumber);
-      print(_questionBank.length);
+    } else {
+      print('Yarışmanın sonuna geldiniz! Başa dönmelisiniz.');
     }
   }
 
-  String getQuestionText(){
+  String getQuestionText() {
     return _questionBank[_questionNumber].questionText;
   }
 
-  bool getCorrectAnswer(questionAnswer) {
+  bool getCorrectAnswer() {
     return _questionBank[_questionNumber].questionAnswer;
   }
 
+  int getTotalQuestions() {
+    return _questionBank.length;
+  }
+
+  void reset() {
+    _questionNumber = 0;
+  }
+
+  // Getter metodu
+  int get questionNumber {
+    return _questionNumber;
+  }
 }

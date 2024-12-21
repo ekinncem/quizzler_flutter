@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuizBrain quizBrain = QuizBrain();
 
@@ -31,17 +32,49 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
+  int questionCount = quizBrain.getTotalQuestions(); // Toplam soru sayısı
 
   void checkAnswer(bool userPickedAnswer) {
-    bool correctAnswer = quizBrain.getCorrectAnswer(true);
-    if (userPickedAnswer == correctAnswer) {
-      print('user got it right!');
-    } else {
-      print('user got it wrong');
-    }
+    bool correctAnswer = quizBrain.getCorrectAnswer();
 
     setState(() {
-      quizBrain.nextQuestion();
+      if (scoreKeeper.length < questionCount) { // Tıklama haklarını kontrol et
+        if (userPickedAnswer == correctAnswer) {
+          scoreKeeper.add(Icon(Icons.check, color: Colors.green));
+        } else {
+          scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+        }
+
+        if (quizBrain.questionNumber < questionCount - 1) {
+          quizBrain.nextQuestion();
+        } else {
+          // Yarışmanın sonuna gelindiğinde mesaj gösterme
+          Alert(
+            context: context,
+            type: AlertType.info,
+            title: "Competetion is Over!",
+            desc: "You should start over for better timing experience!",
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Tamam",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    quizBrain.reset(); // Yarışmayı sıfırlama
+                    scoreKeeper.clear(); // Skorları temizleme
+                  });
+                },
+                width: 120,
+              )
+            ],
+          ).show();
+        }
+      } else {
+        print('Tıklama hakları bitti');
+      }
     });
   }
 
@@ -79,7 +112,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                checkAnswer(false);
+                checkAnswer(true);
               },
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
