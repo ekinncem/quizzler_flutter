@@ -57,7 +57,7 @@ class _QuizPageState extends State<QuizPage> {
             buttons: [
               DialogButton(
                 child: Text(
-                  "Tamam",
+                  "Proceed",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 onPressed: () {
