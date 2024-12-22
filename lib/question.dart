@@ -1,7 +1,9 @@
+// ignore_for_file: prefer_initializing_formals
+
 class Question {
   
-  String questionText;
-  bool questionAnswer;
+  late String questionText;
+  late bool questionAnswer;
 
   Question({required this.questionText, required this.questionAnswer});
 }
